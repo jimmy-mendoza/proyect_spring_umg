@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import com.punto.venta.dto.CategoriaDTO;
 import com.punto.venta.entity.Categoria;
@@ -52,5 +54,24 @@ private Categoria convertirEntidad(CategoriaDTO categoriaDTO){
         }
 
         categoriaRepository.deleteById(idCategoria);
+}
+
+public CategoriaDTO anularCategoria(Integer idCategoria){
+    Categoria categoria = categoriaRepository.findById(idCategoria)
+        .orElseThrow(() -> new RuntimeException("No se puede anular la categoría con ID " + idCategoria + " porque no existe."));
+    categoria.setEstado(false);
+    Categoria savedCategoria = categoriaRepository.save(categoria);
+    return convertirDTO(savedCategoria);
+}
+
+public CategoriaDTO modificarCategoria(Integer idCategoria, CategoriaDTO categoriaDTO){
+    Categoria categoria = categoriaRepository.findById(idCategoria)
+        .orElseThrow(() -> new RuntimeException("No se puede modificar la categoría con ID " + idCategoria + " porque no existe."));
+
+    categoria.setNombre(categoriaDTO.getNombre());
+    categoria.setDescripcion(categoriaDTO.getDescripcion());
+    
+    Categoria savedCategoria = categoriaRepository.save(categoria);
+    return convertirDTO(savedCategoria);
 }
 }
