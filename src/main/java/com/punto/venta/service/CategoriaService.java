@@ -45,4 +45,12 @@ private Categoria convertirEntidad(CategoriaDTO categoriaDTO){
         categoria.setEstado(true);
         return categoria;
     }
+
+    public void eliminarCategoria(Integer idCategoria){
+        if(!categoriaRepository.existsById(idCategoria)){
+            throw new RuntimeException("No se puede eliminar la categoría con ID " + idCategoria + " porque no existe.");       
+        }
+
+        categoriaRepository.deleteById(idCategoria);
+}
 }
