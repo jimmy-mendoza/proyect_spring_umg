@@ -62,14 +62,31 @@ public class ClienteService {
         return convertirDTO(clienteEliminado);
     }
 
-    public ClienteDTO crearCliente(ClienteDTO clienteDTO) {
-        boolean duplicado = clienteRepository.existByNombreIgnoreCaseApellidoIgnoreCase(clienteDTO.getNombre(), clienteDTO.getApellido())
-                .stream()
-                .anyMatch(c -> c.getEstado());
-        if (duplicado) {
-            throw new RuntimeException("Ya existe un cliente con el mismo nombre y apellido.");     
+    public ClienteDTO crearCliente(ClienteDTO clienteDTO){
+        if (clienteRepository.existsByNombreIgnoreCaseAndApellidoIgnoreCase(clienteDTO.getNombre(), clienteDTO.getApellido())) {
+            throw new RuntimeException("El cliente ya existe");
         }
-        return convertirDTO(clienteRepository.save(convertirEntytyCliente(clienteDTO)));
+        Cliente cliente = convertirEntytyCliente(clienteDTO);
+        Cliente clienteGuardado = clienteRepository.save(cliente);
+        return convertirDTO(clienteGuardado);
     }
     
+    public ClienteDTO modificarCliente(Integer idCliente, ClienteDTO clienteDTO) {
+        Cliente cliente = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + idCliente));
+        cliente.setNombre(clienteDTO.getNombre());
+        cliente.setApellido(clienteDTO.getApellido());
+        cliente.setTelefono(clienteDTO.getTelefono());
+        cliente.setEmail(clienteDTO.getEmail());
+        Cliente clienteModificado = clienteRepository.save(cliente);
+        return convertirDTO(clienteModificado);
+    }
+
+    public ClienteDTO modificarEstadoCliente(Integer idCliente, boolean estado) {
+        Cliente cliente = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + idCliente));
+        cliente.setEstado(estado);
+        Cliente clienteModificado = clienteRepository.save(cliente);
+        return convertirDTO(clienteModificado);
+    }
 }
