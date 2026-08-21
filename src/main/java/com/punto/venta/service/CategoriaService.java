@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.punto.venta.dto.CategoriaDTO;
+import com.punto.venta.dto.MessegeResponse;
 import com.punto.venta.entity.Categoria;
 import com.punto.venta.repository.CategoriaRepository;
 
@@ -21,14 +22,6 @@ public class CategoriaService {
         .stream()
         .map(this::convertirDTO)
         .collect(Collectors.toList());
-    }
-
-    private CategoriaDTO convertirDTO(Categoria categoria){
-        CategoriaDTO categoriaDTO = new CategoriaDTO();
-        categoriaDTO.setIdCategoria(categoria.getIdCategoria());
-        categoriaDTO.setNombre(categoria.getNombre());
-        categoriaDTO.setDescripcion(categoria.getDescripcion());
-        return categoriaDTO;
     }
 
 public CategoriaDTO guardar(CategoriaDTO categoriaDTO){
@@ -59,6 +52,15 @@ public CategoriaDTO modificarCategoria(Integer idCategoria, CategoriaDTO categor
         return convertirDTO(savedCategoria);
     }
 
+    public MessegeResponse eliminarCategoria(Integer idCategoria){
+    if(!categoriaRepository.existsById(idCategoria)){
+        throw new RuntimeException("No se puede eliminar la categoría con ID " + idCategoria + " porque no existe.");       
+    }
+
+    categoriaRepository.deleteById(idCategoria);
+    return new MessegeResponse("Categoría con ID " + idCategoria + " eliminada correctamente.");
+}
+
 private Categoria convertirEntidad(CategoriaDTO categoriaDTO){
         Categoria categoria = new Categoria();
         categoria.setIdCategoria(categoriaDTO.getIdCategoria());
@@ -68,12 +70,13 @@ private Categoria convertirEntidad(CategoriaDTO categoriaDTO){
         return categoria;
     }
 
-    public void eliminarCategoria(Integer idCategoria){
-        if(!categoriaRepository.existsById(idCategoria)){
-            throw new RuntimeException("No se puede eliminar la categoría con ID " + idCategoria + " porque no existe.");       
-        }
-
-        categoriaRepository.deleteById(idCategoria);
-}
+    private CategoriaDTO convertirDTO(Categoria categoria){
+        CategoriaDTO categoriaDTO = new CategoriaDTO();
+        categoriaDTO.setIdCategoria(categoria.getIdCategoria());
+        categoriaDTO.setNombre(categoria.getNombre());
+        categoriaDTO.setDescripcion(categoria.getDescripcion());
+        categoriaDTO.setEstado(categoria.getEstado());
+        return categoriaDTO;
+    }
 
 }

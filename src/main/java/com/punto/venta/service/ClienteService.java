@@ -43,7 +43,7 @@ public class ClienteService {
         cliente.setApellido(clienteDTO.getApellido());
         cliente.setTelefono(clienteDTO.getTelefono());
         cliente.setEmail(clienteDTO.getEmail());
-        cliente.setEstado(clienteDTO.getEstado());
+        cliente.setEstado(true); // Establecer el estado como activo al crear o modificar un cliente
         cliente.setFechaRegistro(clienteDTO.getFechaRegistro());
         return cliente;
     }

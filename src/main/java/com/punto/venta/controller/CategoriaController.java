@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.punto.venta.dto.CategoriaDTO;
+import com.punto.venta.dto.MessegeResponse;
 import com.punto.venta.service.CategoriaService;
 import org.springframework.http.HttpStatus;
 
@@ -31,14 +33,13 @@ public CategoriaController(CategoriaService categoriaService) {
 
     @PostMapping 
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoriaDTO crearCategoria(CategoriaDTO categoriaDTO) {
+    public CategoriaDTO crearCategoria(@RequestBody CategoriaDTO categoriaDTO) {
         return categoriaService.guardar(categoriaDTO);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategoria(@PathVariable Integer id) {
-        categoriaService.eliminarCategoria(id);
+    public MessegeResponse eliminarCategoria(@PathVariable Integer id) {
+    return categoriaService.eliminarCategoria(id);
     }
 
         @PutMapping("/{id}/anular") 
